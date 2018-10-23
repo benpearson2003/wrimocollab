@@ -3,7 +3,7 @@ include "base.php";
 
 header('Content-type: application/json');
 
-if (isset($_POST['newgame']) && isset($_POST['newmap']) /*&& isset($_POST['playerid'])*/ && isset($_POST['capitols'])) {
+if (isset($_POST['newgame'])) {
     /*$playerid = htmlspecialchars($_POST['playerid']);*/
     if (/*$playerid == $_SESSION['PlayerId'] && $playerid == $GLOBALS[adminId]*/ true) {
         $newGame = $_POST['newgame'];
@@ -12,205 +12,26 @@ if (isset($_POST['newgame']) && isset($_POST['newmap']) /*&& isset($_POST['playe
         $lengthMap = count($newMap);
         $lengthCapitols = count($capitols);
         if ($newGame == true) {
-            $createMap = "INSERT INTO regions (iswater,regionsize,tribute,spearfaes,archers,lights,heavies,updated) VALUES";
-            for($i = 0; $i < $lengthMap; $i++) {
-                $createMap .= " (".$newMap[$i]."::boolean,
-                                    (NOT ".$newMap[$i]."::boolean)::integer*(random()*16+1),
-                                    (NOT ".$newMap[$i]."::boolean)::integer*100,
-                                    (NOT ".$newMap[$i]."::boolean)::integer*(random()*4+1),
-                                    0,
-                                    (NOT ".$newMap[$i]."::boolean)::integer*(random()*4+1),
-                                    0,
-                                    CURRENT_TIMESTAMP)";
-                if($i < $lengthMap-1){$createMap .= ",";}
-            }
-            $createMap .= ";";
-            $createCapitols = "INSERT INTO clancapitol (clanid,regionid) VALUES";
-            for($i = 0; $i < $lengthCapitols; $i++) {
-                $createCapitols .= " (".($i+1).",".$capitols[$i].")";
-                if($i < $lengthCapitols-1){$createCapitols .= ",";}
-            }
-            $createCapitols .= ";";
             $sqlList = ["SET TIMEZONE='America/Chicago';",
-                        "CREATE TABLE IF NOT EXISTS clans (
+                        "CREATE TABLE IF NOT EXISTS projects (
                             id SERIAL PRIMARY KEY,
                             name VARCHAR(65),
-                            playercount INTEGER DEFAULT 0
+                            writercount INTEGER DEFAULT 0
                         );",
-                        "CREATE TABLE IF NOT EXISTS players (
+                        "CREATE TABLE IF NOT EXISTS writers (
                             id SERIAL PRIMARY KEY,
                             username VARCHAR(65) NOT NULL,
                             password VARCHAR(255) NOT NULL,
                             emailaddress VARCHAR(255) NOT NULL,
-                            fhposition INTEGER DEFAULT 0,
-                            fvposition INTEGER DEFAULT 0,
-                            mhposition INTEGER DEFAULT 0,
-                            mvposition INTEGER DEFAULT 0,
-                            fwmoves INTEGER DEFAULT 0,
-                            flmoves INTEGER DEFAULT 0,
-                            mwmoves INTEGER DEFAULT 0,
-                            mlmoves INTEGER DEFAULT 0,
-                            spearfaes INTEGER DEFAULT 0,
-                            archers INTEGER DEFAULT 0,
-                            lights INTEGER DEFAULT 0,
-                            heavies INTEGER DEFAULT 0,
-                            wingfae INTEGER DEFAULT 0,
-                            currency INTEGER DEFAULT 0,
-                            totaltribute INTEGER DEFAULT 0,
-                            lasttribute TIMESTAMP,
-                            clanid INTEGER REFERENCES clans(id),
+                            mostcontributions INTEGER DEFAULT 0,
+                            mostcontributed INTEGER DEFAULT 0,
+                            finished BOOLEAN DEFAULT FALSE,
                             updated TIMESTAMP
-                        );",
-                        "CREATE TABLE IF NOT EXISTS regions (
-                            id SERIAL PRIMARY KEY,
-                            iswater BOOLEAN,
-                            regionsize INTEGER,
-                            spearfaes INTEGER,
-                            archers INTEGER,
-                            lights INTEGER,
-                            heavies INTEGER,
-                            tribute INTEGER,
-                            updated TIMESTAMP,
-                            playerid INTEGER REFERENCES players(id)
-                        );",
-                        "CREATE TABLE IF NOT EXISTS units (
-                            id SERIAL PRIMARY KEY,
-                            name VARCHAR(65),
-                            offense INTEGER,
-                            defense INTEGER,
-                            cost INTEGER
-                        );",
-                        "CREATE TABLE IF NOT EXISTS items (
-                            id SERIAL PRIMARY KEY,
-                            name VARCHAR(65),
-                            description VARCHAR(255),
-                            value INTEGER,
-                            effects VARCHAR(65)
-                        );",
-                        "CREATE TABLE IF NOT EXISTS flockitem (
-                            id SERIAL PRIMARY KEY,
-                            playerid INTEGER REFERENCES players(id),
-                            itemid INTEGER REFERENCES items(id),
-                            count INTEGER
-                        );",
-                        "CREATE TABLE IF NOT EXISTS merchantitem (
-                            id SERIAL PRIMARY KEY,
-                            playerid INTEGER REFERENCES players(id),
-                            itemid INTEGER REFERENCES items(id),
-                            count INTEGER
-                        );",
-                        "CREATE TABLE IF NOT EXISTS regionitem (
-                            id SERIAL PRIMARY KEY,
-                            regionid INTEGER REFERENCES regions(id),
-                            itemid INTEGER REFERENCES items(id)
-                        );",
-                        "CREATE TABLE IF NOT EXISTS clancapitol (
-                            id SERIAL PRIMARY KEY,
-                            clanid INTEGER REFERENCES clans(id),
-                            regionid INTEGER REFERENCES regions(id)
-                        );",
-                        "CREATE TABLE IF NOT EXISTS improvements (
-                            id SERIAL PRIMARY KEY,
-                            name VARCHAR(65),
-                            description VARCHAR(255),
-                            cost INTEGER,
-                            effects VARCHAR(65)
-                        );",
-                        "CREATE TABLE IF NOT EXISTS regionimprovement (
-                            id SERIAL PRIMARY KEY,
-                            regionid INTEGER REFERENCES regions(id),
-                            improvementid INTEGER REFERENCES improvements(id)
-                        );",
-                        "INSERT INTO improvements (name,description,cost) VALUES
-                            ('town hall','center of organization that allows the construction of other improvements',10000),
-                            ('woodwright','necessary for building a wooden palisade',1000),
-                            ('stone mason','necessary for building a stone wall',1000),
-                            ('blacksmith','necessary for building a castle',2000),
-                            ('winery','creates wine for consumption or sale',4000),
-                            ('barracks','trains and houses combat faes',3000),
-                            ('aviary','specialized barracks for wingfae fae',3000),
-                            ('inn','place to sleep and gossip',4000),
-                            ('wooden palisade','barrier made of wood that helps the defensive garrison',50000),
-                            ('stone wall','barrier made of stone that helps the defensive garrison',150000),
-                            ('castle','the peak of fae defense',350000);",
-                        "INSERT INTO items (name,description,value) VALUES
-                            ('honeycomb','hexagonal matrix of beeswax filled with honey',2),
-                            ('mushroom spores','used to seed mushrooms',2),
-                            ('clay pot','pot made of clay',2),
-                            ('wooden shield','shield made of wood',2),
-                            ('hour glass','time keeping device',2),
-                            ('rune stone','small stone carved with symbols used for divination',2),
-                            ('charcoal','pyrolyzed wood used for hotter, less smokey fires',2),
-                            ('woven armor','armor made by tightly weaving fibrous plants',2),
-                            ('cactus fruit','fruit from a cactus',2),
-                            ('timber','wood for building or burning',2),
-                            ('jar of souls','it looks empty',2),
-                            ('saber','sharp, short sword meant for mounted use',2),
-                            ('crystal circlet','fancy headwear',2),
-                            ('yew bow','preferred weapon of archers',2);",
-                        $createMap,
-                        "INSERT INTO units (name,offense,defense,cost) VALUES
-                            ('spearfae',1,2,20),
-                            ('archer',3,5,65),
-                            ('light groundfae',2,1,20),
-                            ('heavy groundfae',5,3,50),
-                            ('wingfae',8,5,96);",
-                        "INSERT INTO clans (name) VALUES
-                            ('pulosh'),
-                            ('charucher'),
-                            ('shoof'),
-                            ('tisheon'),
-                            ('song'),
-                            ('spichacule');",
-                        "INSERT INTO players (username,password,emailaddress,clanid) VALUES
-                            ('pulosh monarch','password','none',1),
-                            ('charucher monarch','password','none',2),
-                            ('shoof monarch','password','none',3),
-                            ('tisheon monarch','password','none',4),
-                            ('song monarch','password','none',5),
-                            ('spichacule monarch','password','none',6);",
-                        $createCapitols,
-                        "UPDATE regions SET playerid=1 WHERE regions.id=(SELECT regionid FROM clancapitol WHERE clanid=1);",
-                        "UPDATE regions SET playerid=2 WHERE regions.id=(SELECT regionid FROM clancapitol WHERE clanid=2);",
-                        "UPDATE regions SET playerid=3 WHERE regions.id=(SELECT regionid FROM clancapitol WHERE clanid=3);",
-                        "UPDATE regions SET playerid=4 WHERE regions.id=(SELECT regionid FROM clancapitol WHERE clanid=4);",
-                        "UPDATE regions SET playerid=5 WHERE regions.id=(SELECT regionid FROM clancapitol WHERE clanid=5);",
-                        "UPDATE regions SET playerid=6 WHERE regions.id=(SELECT regionid FROM clancapitol WHERE clanid=6);"
+                        );"
                     ];
             foreach ($sqlList as $sql) {
                 echo $pdo->exec($sql);
             }
-            /*
-                CODE FOR GENERATING NEW MAP
-document.body.innerHTML += "<canvas id='canvas' title='click tile to act on' onmousedown='mousedown=true;select(event)' onmouseup='mousedown=false;'></canvas>"
-canvas = document.getElementById('canvas');
-context = canvas.getContext('2d');
-context.canvas.width = 875;
-context.canvas.height = 885;
-context.fillStyle = "green";
-context.fillRect(0,0,8*125,8*125);
-var newImg = document.createElement("img");
-newImg.id = "bub";
-newImg.src = "images/map.png";
-var element = document.body;
-element.appendChild(newImg);
-context.drawImage(document.getElementById('bub'),0,0);
-var imgData = context.getImageData(0, 0, 500, 500).data;
-var i = 0; var j = 0; var x = 0; var newMap = []; var capitols = [];
-while(i<imgData.length){
-    if(imgData[i] == 0){
-    	newMap[x] = 1;
-    } else {
-    	newMap[x] = 0;
-        if(imgData[i] == 200) {
-            capitols[j] = x+1;
-            j++;
-        }
-    }
-    x++;
-    i=i+4;
-}
-            */
         }
     } else {
         echo "you are not authorized to do that. notify Ben.";

@@ -1,11 +1,12 @@
-# CACOPH
+# WriMoCollab
 
-[Play the game](https:/cacoph.herokuapp.com/)
+A system to encourage and gamify collaborative writing.
 
-Tile-based capture game inspired by David Deal's game "War of Nations".
-
-<p align="middle"><img src="images/WIP/preview1.png" width="300px" alt="Preview Showing Movement Function" title="Preview Showing Movement Function"/>
-<img src="images/WIP/preview2.png" width="300px" alt="Preview Showing Recruit and Reinforce Functions" title="Preview Showing Recruit and Reinforce Functions"/></p>
+1. Login
+2. Create or join a project
+- create project: add existing users or invite and set word goal
+3. Write n words every 24 hours where n = words remaining / days remaining / number of writers
+- failure to meet goal drops user from project, decrementing the number of writers and making the project harder to complete
 
 ## Usage
 
@@ -13,7 +14,7 @@ Optimized to be deployed from GitHub to Heroku. Enable the Heroku Postgres datab
 
 ## Disclaimer
 
-I'm doing everything on master cuz I'm trash.
+I'm not responsible for your friends hating you. However, if you and/or your friends love WriMoCollab, consider the following section.
 
 ## Funding
 
