@@ -1,0 +1,193 @@
+html,body {
+    width: 100%;
+    margin: 0px;
+    font-size: 2em;
+}
+
+canvas {
+    display: block;
+}
+
+button {
+    width:100%;
+    padding: 15px 25px;
+    margin-bottom: 20px;
+    font-size: inherit;
+    cursor: pointer;
+    text-align: center;
+    outline: none;
+    background-color: lightblue;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #999;
+}
+
+button:active {
+    background-color: #3399ff;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
+
+div.info {
+    width: 100%;
+    display: block;
+    background-color: white;
+}
+
+.info table {
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 0.80em;
+}
+
+.info td, .info th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.info tr:nth-child(even){background-color: lightgray;}
+
+.info table input {
+    background-color: lightsteelblue;
+}
+
+div.info .sub-info {}
+
+#attack {
+    background-color: pink;
+}
+
+#recruit-button {
+    background-color: lightblue;
+}
+
+#status {
+    width: 100%;
+}
+
+.out-of-moves {
+    color:red;
+}
+
+.treasury {
+    width: 50%;
+    vertical-align: top;
+    display: inline-block;
+    font-size: 0.80em;
+}
+
+#moves {
+    float: right;
+    width: 50%;
+    display: inline-block;
+    font-size: 0.80em;
+}
+
+#unit {}
+
+#defensive-garrison {
+    text-align: center;
+}
+
+#improvements {
+    text-align: center;
+}
+
+#units {
+    text-align: center;
+}
+
+#jumpto {
+    display: flex;
+}
+
+#jumpto input {
+    width: 30%;
+    background-color: lightsteelblue;
+}
+
+#jumpto button {
+    width: 30%
+}
+
+#available-villagers {
+    margin-bottom: 1em;
+}
+
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: absolute;
+    z-index: 1;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    padding-top: 100px;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    width: 100%;
+    float: left;
+}
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.close:hover, .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+input {
+    width: 100%;
+    font-size: inherit;
+}
+
+#donate img {
+    width: 100%;
+    margin: 20px;
+}
+
+#map-button {
+    width: 125px;
+    height: 125px;
+    font-size: smaller;
+    background: url(images/flag.png) 0 -250px;
+}
+
+nav {
+    margin: 0;
+    padding: 0;
+    background-color: #f1f1f1;
+}
+nav a {
+    display:block;
+    color: #000;
+    padding: 8px 16px;
+    margin: 0 0 10px 0;
+    text-decoration: none;
+}
+nav a:hover {
+    background-color: #555;
+    color: white;
+}
+
+@media screen and (min-width: 1500px) {
+}
